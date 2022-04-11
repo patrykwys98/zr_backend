@@ -16,5 +16,5 @@ class Profile(models.Model):
     email = models.EmailField(max_length=100,  null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True,  null=True, blank=True)
     updatedAt = models.DateTimeField(auto_now=True,  null=True, blank=True)
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE,  null=True, blank=True)
+    # project = models.ForeignKey(
+    #     Project, on_delete=models.CASCADE,  null=True, blank=True)

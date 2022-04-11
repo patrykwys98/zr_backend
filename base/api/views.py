@@ -1,8 +1,6 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from base.models import User
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.contrib.auth.hashers import make_password
@@ -20,21 +18,21 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        token["username"] = user.username
+        token["email"] = user.email
         token['message'] = 'You have successfully logged in.'
 
         return token
 
     def validate(self, attrs):
         credentials = {
-            'username': '',
+            'email': '',
             'password': attrs.get("password")
         }
 
-        user_obj = User.objects.filter(email=attrs.get("username")).first(
-        ) or User.objects.filter(username=attrs.get("username")).first()
+        user_obj = User.objects.filter(email=attrs.get("email")).first(
+        )
         if user_obj:
-            credentials['username'] = user_obj.username
+            credentials['email'] = user_obj.email
 
         return super().validate(credentials)
 
