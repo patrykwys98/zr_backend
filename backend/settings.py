@@ -13,6 +13,8 @@ if os.path.isfile(dotenv_file):
 
 DEBUG = True
 
+AUTH_USER_MODEL = "base.User"
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,6 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'base',
+    'profiles',
+    'comments',
+    'projects',
 
     'corsheaders',
     'rest_framework',
@@ -30,9 +35,11 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    
 }
 
 SIMPLE_JWT = {
@@ -104,6 +111,13 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
 CORS_ORIGIN_ALLOW_ALL = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())

@@ -1,13 +1,16 @@
 
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
+# from .models import Profile
 
 
-def updateUser(sender, instance, **kwargs):
-    user = instance
-    if user.email == '':
-        user.username = user.email
-        user.save()
+# def createUserProfile(sender, instance, **kwargs):
+#     email = ""
+#     if instance.email != "":
+#         email = instance.email
+#     profile = Profile.objects.create(
+#         user=instance, name="", surname="", age=0, phoneNumber=0, email=email, sex="")
+#     profile.save()
 
 
-pre_save.connect(updateUser, sender=User)
+# post_save.connect(createUserProfile, sender=User)
