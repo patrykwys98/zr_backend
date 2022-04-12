@@ -3,11 +3,11 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from base.models import User
 from rest_framework.response import Response
 from rest_framework import status, generics
-from django.contrib.auth.hashers import make_password
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, ChangePasswordSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
+from rest_framework.permissions import IsAuthenticated
 from django.urls import reverse
 import jwt
 from django.conf import settings
@@ -58,9 +58,9 @@ class RegisterView(generics.GenericAPIView):
         relativeLink = reverse('verify_email')
 
         absurl = "http://"+current_site+relativeLink+"?token="+str(token)
-        email_body = "Hi " + user.username + "Verify your email" + absurl
+        email_body = "Hi " + user.username + "Verify your email " + absurl
         data = {'email_body': email_body,
-                "email_subject": "Verify your email address", 'to_email': user.email, }
+                "email_subject": "Verify your email address ", 'to_email': user.email, }
         Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)
@@ -81,3 +81,39 @@ class VerifyEmail(generics.GenericAPIView):
             return Response({'error': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as e:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
