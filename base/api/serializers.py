@@ -1,7 +1,6 @@
 from base.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
-# from base.models import Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,7 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         email = attrs.get('email', "")
         username = attrs.get('username', "")
-        
+
         if not username.isalnum():
             raise serializers.ValidationError(
                 'Username should be alphanumeric')
