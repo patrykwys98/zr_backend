@@ -19,6 +19,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         token["email"] = user.email
+        token['username'] = user.username
+        token['id'] = user.id
+        token['is_verified'] = user.is_verified
         token['message'] = 'You have successfully logged in.'
 
         return token
@@ -60,7 +63,7 @@ class RegisterView(generics.GenericAPIView):
         absurl = "http://"+current_site+relativeLink+"?token="+str(token)
         email_body = "Hi " + user.username + "Verify your email " + absurl
         data = {'email_body': email_body,
-                "email_subject": "Verify your email address ", 'to_email': user.email, }
+                "email_subject": "Verify your email address", 'to_email': user.email, }
         Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)

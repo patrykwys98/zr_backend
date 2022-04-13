@@ -29,7 +29,9 @@ urlpatterns = [
     path("email-verify/", views.VerifyEmail.as_view(), name="verify_email"),
     path('change-password/', ChangePasswordView.as_view(),
          name='change-password'),
+
     path("profiles/", include("profiles.urls")),
+    path("projects/", include("projects.urls")),
 
 
     path('', schema_view.with_ui('swagger',

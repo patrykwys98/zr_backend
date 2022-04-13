@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Profile
 from base.models import User
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, ProfilesSerializer
 
 
 @api_view(['GET'])
@@ -30,3 +29,13 @@ def updateProfile(request):
     profile.save()
 
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProfiles(request):
+    profile = Profile.objects.all()
+    serializer = ProfilesSerializer(profile, many=True)
+    return Response(serializer.data)
+
+
