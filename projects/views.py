@@ -14,7 +14,8 @@ from django.db.models import Q
 def getProjects(request):
     user = request.user
     profile = Profile.objects.get(user=user)
-    projects = Project.objects.filter(Q(users=profile) | Q(author=user))
+    projects = Project.objects.filter(
+        Q(users=profile) | Q(author=user)).order_by('-createdAt')
 
     serializer = ProjectSerializer(
         projects, context={'request': request}, many=True)
@@ -80,3 +81,16 @@ def getProject(request, pk):
         project, context={'request': request}, many=False)
 
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteProject(request, pk):
+    user = request.user
+    project = Project.objects.get(id=pk)
+
+    if project.author != user:
+        return Response(status=403)
+    project.delete()
+
+    return Response({'status': 'OK'})
