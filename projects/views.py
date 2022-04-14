@@ -30,10 +30,10 @@ def createProject(request):
 
     project = Project.objects.create(
         author=user, title=data['title'], description=data['description'], dateOfStart=data['dateOfStart'], dateOfEnd=data['dateOfEnd'])
-
-    for user in data['users']:
-        profile = Profile.objects.get(id=user)
-        project.users.add(profile)
+    if data['users']:
+        for user in data['users']:
+            profile = Profile.objects.get(id=user)
+            project.users.add(profile)
 
     serializer = CreateProjectSerializer(project, many=False)
 
