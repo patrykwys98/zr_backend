@@ -123,7 +123,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "https://zr-backend.herokuapp.com",
+    "https://zr-frontend.herokuapp.com",
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
