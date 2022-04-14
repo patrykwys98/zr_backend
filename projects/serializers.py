@@ -1,5 +1,6 @@
 from .models import Project
 from rest_framework import serializers
+from comments.serializers import CommentSerializer
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -7,6 +8,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     authorId = serializers.SerializerMethodField()
     isAuthor = serializers.SerializerMethodField()
     usersNames = serializers.SerializerMethodField()
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project

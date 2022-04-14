@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Project
-from base.models import User
 from profiles.models import Profile
 from .serializers import ProjectSerializer, CreateProjectSerializer, UpdateProjectSerializer
 from django.db.models import Q
@@ -56,6 +55,7 @@ def updateProject(request):
     project.description = data['description']
     project.dateOfStart = data['dateOfStart']
     project.dateOfEnd = data['dateOfEnd']
+    project.status = data['status']
     project.users.set([])
     try:
         for user in data['users']:

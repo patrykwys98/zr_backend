@@ -15,11 +15,11 @@ schema_view = get_schema_view(
         title="ZR",
         default_version='v1',
         description="Test description",
-        contact=openapi.Contact(email="patrykwys98test@snippets.local"),
+        contact=openapi.Contact(email="patrykwys98test@gmail.com"),
         license=openapi.License(name="Text License"),
     ),
     public=True,
-    permission_classes=[permissions.AllowAny],
+    permission_classes=[permissions.IsAdminUser],
 )
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
 
     path("profiles/", include("profiles.urls")),
     path("projects/", include("projects.urls")),
+    path("comments/", include("comments.urls")),
 
 
     path('', schema_view.with_ui('swagger',

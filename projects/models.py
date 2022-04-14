@@ -5,8 +5,8 @@ from profiles.models import Profile
 
 class Project(models.Model):
     author = models.ForeignKey(
-        to=User, on_delete=models.CASCADE,  null=True, blank=True)
-    title = models.CharField(max_length=255,  null=True, blank=True)
+        to=User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
     dateOfStart = models.DateTimeField(null=True, blank=True)
     dateOfEnd = models.DateTimeField(null=True, blank=True)
     description = models.TextField(blank=True, null=True)

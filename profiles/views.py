@@ -25,6 +25,10 @@ def updateProfile(request):
     data = request.data
     profile.name = data['name']
     profile.surname = data['surname']
+    profile.email = data['email']
+    profile.sex = data['sex']
+    profile.phoneNumber = data['phoneNumber']
+    profile.age = data['age']
 
     profile.save()
 
@@ -37,5 +41,3 @@ def getProfiles(request):
     profile = Profile.objects.all()
     serializer = ProfilesSerializer(profile, many=True)
     return Response(serializer.data)
-
-
