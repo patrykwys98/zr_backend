@@ -9,7 +9,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
-        ordering = ['createdAt']
+        ordering = ['-createdAt']
 
     def get_author(self, obj):
         return obj.author.profile.name + " " + obj.author.profile.surname + " " + obj.author.profile.email
