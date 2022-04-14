@@ -9,6 +9,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('label', 'value')
+        ordering = ['createdAt']
 
     def get_label(self, obj):
         if obj.surname:
@@ -20,3 +21,4 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+        ordering = ['createdAt']

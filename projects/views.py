@@ -14,7 +14,7 @@ def getProjects(request):
     user = request.user
     profile = Profile.objects.get(user=user)
     projects = Project.objects.filter(
-        Q(users=profile) | Q(author=user)).order_by('-createdAt')
+        Q(users=profile) | Q(author=user)).order_by('-createdAt').distinct()
 
     serializer = ProjectSerializer(
         projects, context={'request': request}, many=True)
