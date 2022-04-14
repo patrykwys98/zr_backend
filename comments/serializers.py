@@ -15,7 +15,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return obj.author.profile.name + " " + obj.author.profile.surname + " " + obj.author.profile.email
 
     def get_isAuthor(self, obj):
-        return obj.author == self.context['request'].user
+        return obj.author == obj.project.author
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
