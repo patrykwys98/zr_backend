@@ -55,16 +55,16 @@ class RegisterView(generics.GenericAPIView):
 
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        token = RefreshToken.for_user(user).access_token
+        # token = RefreshToken.for_user(user).access_token
 
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('verify_email')
+        # current_site = get_current_site(request).domain
+        # relativeLink = reverse('verify_email')
 
-        absurl = "http://"+current_site+relativeLink+"?token="+str(token)
-        email_body = "Hi " + user.username + "Verify your email " + absurl
-        data = {'email_body': email_body,
-                "email_subject": "Verify your email address", 'to_email': user.email, }
-        Util.send_email(data)
+        # absurl = "http://"+current_site+relativeLink+"?token="+str(token)
+        # email_body = "Hi " + user.username + "Verify your email " + absurl
+        # data = {'email_body': email_body,
+        #         "email_subject": "Verify your email address", 'to_email': user.email, }
+        # Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
@@ -102,36 +102,6 @@ class ChangePasswordView(generics.UpdateAPIView):
         if serializer.is_valid():
             if not self.object.check_password(serializer.data.get("old_password")):
                 return Response({"message": ["Wrong password old password."]}, status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': []
-            }
-
-            return Response(response)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ChangeEmail(generics.UpdateAPIView):
-    serializer_class = ChangePasswordSerializer
-    model = User
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
