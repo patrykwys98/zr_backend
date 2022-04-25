@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Profile
 from base.models import User
 from .serializers import ProfileSerializer, ProfilesSerializer
+from rest_framework import status
 
 
 @api_view(['GET'])
@@ -18,26 +19,21 @@ def getProfile(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateProfile(request):
-    user = request.user
-    profile = Profile.objects.get(user=user)
-    serializer = ProfileSerializer(profile, many=False)
+    profile = Profile.objects.get(user=request.user)
 
-    data = request.data
-    profile.name = data['name']
-    profile.surname = data['surname']
-    profile.email = data['email']
-    profile.sex = data['sex']
-    profile.phoneNumber = data['phoneNumber']
-    profile.age = data['age']
+    profile.name = request.data['name']
+    profile.surname = request.data['surname']
+    profile.email = request.data['email']
+    profile.sex = request.data['sex']
+    profile.phoneNumber = request.data['phoneNumber']
+    profile.age = request.data['age']
 
     profile.save()
 
-    return Response(serializer.data)
+    return Response(ProfileSerializer(profile, many=False).data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProfiles(request):
-    profile = Profile.objects.all()
-    serializer = ProfilesSerializer(profile, many=True)
-    return Response(serializer.data)
+    return Response(ProfilesSerializer(Profile.objects.all(), many=True).data, status=status.HTTP_200_OK)

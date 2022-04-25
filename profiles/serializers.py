@@ -13,7 +13,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
 
     def get_label(self, obj):
         if obj.surname:
-            return obj.name + ' ' + obj.surname
+            return f"{obj.name} {obj.surname}"
         return obj.name
 
 
