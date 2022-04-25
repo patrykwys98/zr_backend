@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Project
 from profiles.models import Profile
-from .serializers import ProjectSerializer, CreateProjectSerializer, UpdateProjectSerializer
+from .serializers import ProjectsSerializer, CreateProjectSerializer, UpdateProjectSerializer, SingleProjectSerializer
 from django.db.models import Q
 from rest_framework import status
 
@@ -12,15 +12,31 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProjects(request):
-    return Response(ProjectSerializer(
+    return Response(ProjectsSerializer(
         Project.objects.filter(
             Q(users=Profile.objects.get(user=request.user)) | Q(author=request.user)).order_by('-createdAt').distinct(),
         context={'request': request}, many=True).data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProject(request, pk):
+    return Response(SingleProjectSerializer(
+        Project.objects.get(id=pk), context={'request': request}, many=False).data, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createProject(request):
+
+    if request.data['title'] == '':
+        return Response({'message': 'You cannot send empty title'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.data['description'] == '':
+        return Response({'message': 'You cannot send empty description'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.data['dateOfStart'] > request.data['dateOfEnd']:
+        return Response({'message': 'Start date must be before end date'}, status=status.HTTP_400_BAD_REQUEST, )
 
     project = Project.objects.create(
         author=request.user, title=request.data['title'], description=request.data['description'],
@@ -41,13 +57,21 @@ def updateProject(request):
     if project.author != request.user:
         return Response(status=status.HTTP_403_FORBIDDEN)
 
-    project.title = request.data['title']
+    if request.data['title'] != '':
+        project.title = request.data['title']
+    else:
+        return Response({'message': 'Title field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
     project.description = request.data['description']
+
+    if request.data['dateOfStart'] > request.data['dateOfEnd']:
+        return Response({'message': 'Start date must be before end date'}, status=status.HTTP_400_BAD_REQUEST, )
+
     project.dateOfStart = request.data['dateOfStart']
     project.dateOfEnd = request.data['dateOfEnd']
+
     project.status = request.data['status']
     project.users.set([])
-    print(request.data['users'])
     if request.data['users'] != ['']:
         for user in request.data['users']:
             profile = Profile.objects.get(id=user)
@@ -56,13 +80,6 @@ def updateProject(request):
     project.save()
 
     return Response(UpdateProjectSerializer(project, many=False).data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getProject(request, pk):
-    return Response(ProjectSerializer(
-        Project.objects.get(id=pk), context={'request': request}, many=False).data, status=status.HTTP_200_OK)
 
 
 @api_view(['DELETE'])

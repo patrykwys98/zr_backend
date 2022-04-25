@@ -27,6 +27,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         return [user.name + " " + user.surname + " " + user.email for user in obj.users.all()]
 
 
+class ProjectsSerializer(ProjectSerializer):
+    class Meta:
+        model = Project
+        fields = ("id", "title", "author", "status",
+                  "isAuthor", "dateOfStart", "dateOfEnd", "authorId")
+
+
+class SingleProjectSerializer(ProjectsSerializer):
+    class Meta:
+        model = Project
+        fields = ProjectsSerializer.Meta.fields + \
+            ("description", "usersNames", "comments", "users")
+
+
 class CreateProjectSerializer(serializers.ModelSerializer):
 
     class Meta:

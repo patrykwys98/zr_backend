@@ -48,13 +48,13 @@ class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        user_data = serializer.data
-        user = User.objects.get(email=user_data['email'])
+        user = User.objects.get(email=serializer.data['email'])
+
         # token = RefreshToken.for_user(user).access_token
 
         # current_site = get_current_site(request).domain
@@ -66,7 +66,7 @@ class RegisterView(generics.GenericAPIView):
         #         "email_subject": "Verify your email address", 'to_email': user.email, }
         # Util.send_email(data)
 
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class VerifyEmail(generics.GenericAPIView):
