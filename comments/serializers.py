@@ -12,7 +12,7 @@ class CommentSerializer(serializers.ModelSerializer):
         ordering = ['-createdAt']
 
     def get_author(self, obj):
-        return obj.author.profile.name + " " + obj.author.profile.surname + " " + obj.author.profile.email
+        return f"{obj.author.profile.name} {obj.author.profile.surname} {obj.author.profile.email}"
 
     def get_isAuthor(self, obj):
         return obj.author == obj.project.author
