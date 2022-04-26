@@ -10,10 +10,7 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProfile(request):
-    user = request.user
-    profile = Profile.objects.get(user=user)
-    serializer = ProfileSerializer(profile, many=False)
-    return Response(serializer.data)
+    return Response(ProfileSerializer(Profile.objects.get(user=request.user), many=False).data, status=status.HTTP_200_OK)
 
 
 @api_view(['PUT'])

@@ -19,7 +19,7 @@ class Project(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
     status = models.CharField(choices=STATUS_CHOICES,
-                              default="new", max_length=20)
+                              default="New", max_length=20)
     users = models.ManyToManyField(to=Profile)
 
     def __str__(self):

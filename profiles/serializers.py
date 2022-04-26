@@ -20,5 +20,5 @@ class ProfilesSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ["name", "surname", "age", "sex", "phoneNumber", "email"]
         ordering = ['createdAt']

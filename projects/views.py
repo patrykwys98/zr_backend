@@ -91,4 +91,4 @@ def deleteProject(request, pk):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     project.delete()
-    return Response(status=status.HTTP_200_OK)
+    return Response({"message": "Project deleted"}, status=status.HTTP_200_OK)
