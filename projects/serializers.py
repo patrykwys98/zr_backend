@@ -31,7 +31,7 @@ class ProjectsSerializer(ProjectSerializer):
     class Meta:
         model = Project
         fields = ("id", "title", "author", "status",
-                  "isAuthor", "dateOfStart", "dateOfEnd", "authorId")
+                  "isAuthor", "dateOfStart", "dateOfEnd")
 
 
 class SingleProjectSerializer(ProjectsSerializer):
