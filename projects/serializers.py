@@ -35,6 +35,7 @@ class ProjectsSerializer(ProjectSerializer):
 
 
 class SingleProjectSerializer(ProjectsSerializer):
+    
     class Meta:
         model = Project
         fields = ProjectsSerializer.Meta.fields + \

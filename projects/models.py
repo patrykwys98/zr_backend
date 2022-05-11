@@ -13,8 +13,8 @@ class Project(models.Model):
     author = models.ForeignKey(
         to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    dateOfStart = models.DateTimeField(null=True, blank=True)
-    dateOfEnd = models.DateTimeField(null=True, blank=True)
+    dateOfStart = models.DateField(null=True, blank=True)
+    dateOfEnd = models.DateField(null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
