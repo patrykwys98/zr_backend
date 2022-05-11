@@ -12,7 +12,10 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProjects(request):
-    print(request.user)
+    
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+        
     return Response(ProjectsSerializer(
         Project.objects.filter(
             Q(users=Profile.objects.get(user=request.user)) | Q(author=request.user)).order_by('-createdAt').distinct(),
@@ -22,24 +25,22 @@ def getProjects(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProject(request, pk):
+
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+        
     if request.user.profile in Project.objects.get(id=pk).users.all() or Project.objects.get(id=pk).author == request.user:
         return Response(SingleProjectSerializer(Project.objects.get(id=pk), context={'request': request}).data, status=status.HTTP_200_OK)
     else:
         return Response({"message": "You cant watch this project"}, status=status.HTTP_403_FORBIDDEN)
-
-    # Project.objects.filter(id=pk).users_set.filter(Profile.objects.get(user=request.user)).exists():
-    # return Response(SingleProjectSerializer(
-    #         Project.objects.get(id=pk), context={'request': request}, many=False).data, status=status.HTTP_200_OK)
-    # else:
-    #     return Response(status=status.HTTP_404_NOT_FOUND)
-
     
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createProject(request):
 
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+        
     if request.data['title'] == '':
         return Response({'message': 'You cannot send empty title'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,6 +65,9 @@ def createProject(request):
 @permission_classes([IsAuthenticated])
 def updateProject(request):
 
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+        
     project = Project.objects.get(id=request.data['id'])
     if project.author != request.user:
         return Response(status=status.HTTP_403_FORBIDDEN)
@@ -96,6 +100,10 @@ def updateProject(request):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteProject(request, pk):
+
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+        
     project = Project.objects.get(id=pk)
 
     if project.author != request.user:

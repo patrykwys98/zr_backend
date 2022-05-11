@@ -10,6 +10,10 @@ from .serializers import CreateCommentSerializer
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addComment(request):
+
+    if request.method == 'OPTIONS':
+        return Response(status=status.HTTP_200_OK)
+
     if request.user.profile in Project.objects.get(id=request.data['project_id']).users.all() or Project.objects.get(id=request.data['project_id']).author == request.user:
         if request.data['text'] == '':
             return Response({'message': 'Comment cannot be empty'})
