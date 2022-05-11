@@ -7,7 +7,7 @@ from .serializers import ProfileSerializer, ProfilesSerializer
 from rest_framework import status
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-
+import re
 
 @api_view(['GET', "OPTIONS"])
 @permission_classes([IsAuthenticated])
@@ -41,9 +41,12 @@ def updateProfile(request):
     if request.data['sex'] == '':
         return Response({'message': 'You cannot send empty sex'}, status=status.HTTP_400_BAD_REQUEST)
     
-    if request.data['age'] == "" and type(request.data['age'])!=int:
+    if request.data['age'] == "" and type(request.data['age'])!=int and request.data['age'] < 18 and request.data['age'] > 100:
         return Response({'message': 'Please enter a valid age'}, status=status.HTTP_400_BAD_REQUEST)
 
+    if re.match(r"^[189][0-9]{7}$", request.data['phoneNumber']) is None:
+        return Response({'message': 'Please enter a valid phone number'}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
     profile = Profile.objects.get(user=request.user)
