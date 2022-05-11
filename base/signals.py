@@ -7,12 +7,9 @@ def createUserProfile(sender, created, instance, **kwargs):
     if created:
         email = ""
         if instance.email != "":
-            email = instance.email
-        username = ""
-        if instance.username != "":
-            username = instance.username
+            email = instance.email      
         profile = Profile.objects.create(
-            user=instance, name=username, surname="", age=0, phoneNumber=0, email=email, sex="")
+            user=instance, surname="", age=0, phoneNumber=0, email=email, sex="")
         profile.save()
 
 

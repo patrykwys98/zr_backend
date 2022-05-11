@@ -19,7 +19,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         token["email"] = user.email
-        token['username'] = user.username
         token['id'] = user.id
         token['is_verified'] = user.is_verified
         token['message'] = 'You have successfully logged in.'
@@ -55,36 +54,8 @@ class RegisterView(generics.GenericAPIView):
 
         user = User.objects.get(email=serializer.data['email'])
 
-        # token = RefreshToken.for_user(user).access_token
-
-        # current_site = get_current_site(request).domain
-        # relativeLink = reverse('verify_email')
-
-        # absurl = "http://"+current_site+relativeLink+"?token="+str(token)
-        # email_body = "Hi " + user.username + "Verify your email " + absurl
-        # data = {'email_body': email_body,
-        #         "email_subject": "Verify your email address", 'to_email': user.email, }
-        # Util.send_email(data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class VerifyEmail(generics.GenericAPIView):
-    def get(self, request):
-        token = request.GET.get('token')
-        try:
-            payload = jwt.decode(
-                token, settings.SECRET_KEY, algorithms='HS256')
-            user = User.objects.get(id=payload['user_id'])
-            if not user.is_verified:
-                user.is_verified = True
-                user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError as e:
-            return Response({'error': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.exceptions.DecodeError as e:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer

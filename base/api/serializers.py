@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin']
+        fields = ['id', '_id', 'email', 'name', 'isAdmin']
 
     def get__id(self, obj):
         return obj.id
@@ -31,7 +31,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = User
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
+        fields = ['id', '_id', 'email', 'name', 'isAdmin', 'token']
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
@@ -44,15 +44,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['email', 'password']
 
     def validate(self, attrs):
         email = attrs.get('email', "")
-        username = attrs.get('username', "")
-
-        if not username.isalnum():
-            raise serializers.ValidationError(
-                'Username should be alphanumeric')
         return attrs
 
     def create(self, validated_data):
