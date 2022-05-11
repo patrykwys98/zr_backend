@@ -7,9 +7,9 @@ from .serializers import ProfileSerializer, ProfilesSerializer
 from rest_framework import status
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-import phonenumbers
 
-@api_view(['GET', 'OPTIONS'])
+
+@api_view(['GET', "OPTIONS"])
 @permission_classes([IsAuthenticated])
 def getProfile(request):
 
@@ -19,7 +19,7 @@ def getProfile(request):
     return Response(ProfileSerializer(Profile.objects.get(user=request.user), many=False).data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'OPTIONS'])
+@api_view(['PUT', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def updateProfile(request):
 
