@@ -102,7 +102,7 @@ def updateProject(request):
 def deleteProject(request, pk):
 
     if request.method == 'OPTIONS':
-        return Response(status=status.HTTP_200_OK)
+        Response(status=status.HTTP_200_OK)
         
     project = Project.objects.get(id=pk)
 

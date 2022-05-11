@@ -70,7 +70,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
 
         if request.method == 'OPTIONS':
-            return Response(status=status.HTTP_200_OK)
+            Response(status=status.HTTP_200_OK)
 
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)

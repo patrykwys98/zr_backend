@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 import phonenumbers
 
-@api_view(['GET'])
+@api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def getProfile(request):
 
@@ -19,7 +19,7 @@ def getProfile(request):
     return Response(ProfileSerializer(Profile.objects.get(user=request.user), many=False).data, status=status.HTTP_200_OK)
 
 
-@api_view(['PUT'])
+@api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def updateProfile(request):
 
@@ -61,11 +61,9 @@ def updateProfile(request):
     return Response(ProfileSerializer(profile, many=False).data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def getProfiles(request):
-
     if request.method == 'OPTIONS':
         return Response(status=status.HTTP_200_OK)
-        
     return Response(ProfilesSerializer(Profile.objects.all(), many=True).data, status=status.HTTP_200_OK)
