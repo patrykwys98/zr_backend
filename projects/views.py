@@ -9,7 +9,7 @@ from django.db.models import Q
 from rest_framework import status
 
 
-@api_view(['GET', 'OPTIONS'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProjects(request):
     

@@ -4,12 +4,9 @@ from base.models import User
 from rest_framework.response import Response
 from rest_framework import status, generics
 from .serializers import RegisterSerializer, ChangePasswordSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
-from .utils import Util
-from django.contrib.sites.shortcuts import get_current_site
+from profiles.models import Profile
 from rest_framework.permissions import IsAuthenticated
-from django.urls import reverse
-import jwt
+
 from django.conf import settings
 
 
@@ -54,7 +51,6 @@ class RegisterView(generics.GenericAPIView):
 
         user = User.objects.get(email=serializer.data['email'])
 
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def options(self, request):
@@ -72,15 +68,16 @@ class ChangePasswordView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
 
-        if request.method == 'OPTIONS':
-            Response(status=status.HTTP_200_OK)
-
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"message": ["Wrong password old password."]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": ["Wrong old password."]}, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.data.get("new_password") != serializer.data.get("confirm_password"):
+                return Response({"message": ["New password and confirm password does not match."]}, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.data.get("new_password") != "" and len(serializer.data.get("new_password")) < 6:
+                return Response({"message": ["New password must be at least 6 characters long."]}, status=status.HTTP_400_BAD_REQUEST)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
