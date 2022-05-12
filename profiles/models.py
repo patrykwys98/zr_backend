@@ -11,7 +11,7 @@ class Profile(models.Model):
     age = models.PositiveIntegerField(
         null=True, blank=True, validators=[MaxValueValidator(150)])
     sex = models.CharField(max_length=20,  null=True, blank=True)
-    phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$")
+    phoneNumberRegex = RegexValidator(regex = "^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$")
     phoneNumber = models.CharField(validators = [phoneNumberRegex], max_length = 16, unique = True)
 
     email = models.EmailField(max_length=100)

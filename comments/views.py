@@ -7,7 +7,7 @@ from .models import Comment
 from .serializers import CreateCommentSerializer
 
 
-@api_view(['POST', 'OPTIONS'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addComment(request):
 

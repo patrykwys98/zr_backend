@@ -57,6 +57,9 @@ class RegisterView(generics.GenericAPIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def options(self, request):
+        return Response(status=status.HTTP_200_OK)
+
 class ChangePasswordView(generics.UpdateAPIView):
     
     serializer_class = ChangePasswordSerializer
@@ -90,3 +93,6 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def options(self, request):
+        return Response(status=status.HTTP_200_OK)

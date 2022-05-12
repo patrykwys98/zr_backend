@@ -22,7 +22,7 @@ def getProjects(request):
         context={'request': request}, many=True).data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'OPTIONS'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProject(request, pk):
 
@@ -34,7 +34,7 @@ def getProject(request, pk):
     else:
         return Response({"message": "You cant watch this project"}, status=status.HTTP_403_FORBIDDEN)
     
-@api_view(['POST', 'OPTIONS'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createProject(request):
 
@@ -61,7 +61,7 @@ def createProject(request):
     return Response(CreateProjectSerializer(project, many=False).data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['PUT', 'OPTIONS'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateProject(request):
 
@@ -97,7 +97,7 @@ def updateProject(request):
     return Response(UpdateProjectSerializer(project, many=False).data, status=status.HTTP_200_OK)
 
 
-@api_view(['DELETE', 'OPTIONS'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteProject(request, pk):
 
