@@ -24,7 +24,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         return obj.author == self.context.get("request").user
 
     def get_usersNames(self, obj):
-        return [{"name":user.name, "surname":user.surname, "email" : user.email, "phoneNumber":user.phoneNumber, "age": user.ageg} for user in obj.users.all()]
+        return [{"name":user.name, "surname":user.surname, "email" : user.email, "phoneNumber":user.phoneNumber, "age": user.age} for user in obj.users.all()]
 
 
 class ProjectsSerializer(ProjectSerializer):
