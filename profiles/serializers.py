@@ -13,9 +13,10 @@ class ProfilesSerializer(serializers.ModelSerializer):
         ordering = ['createdAt']
 
     def get_label(self, obj):
-        if obj.surname:
-            return f"{obj.name} {obj.surname} {obj.email}"
-        return obj.email
+        if obj.name:
+            return f"{obj.name} {obj.surname} {obj.email} {obj.phoneNumber}".replace("None ", "").replace(" None", "")
+        else:
+            return f"{obj.email}"
 
 
 class ProfileSerializer(serializers.ModelSerializer):

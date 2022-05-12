@@ -9,7 +9,7 @@ def createUserProfile(sender, created, instance, **kwargs):
         if instance.email != "":
             email = instance.email   
         profile = Profile.objects.create(
-            user=instance, email=email)
+            user=instance, email=email, name="", surname="", sex="Other", phoneNumber="")
         profile.save()
 
 post_save.connect(createUserProfile, sender=User)

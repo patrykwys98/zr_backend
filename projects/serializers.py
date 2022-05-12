@@ -15,7 +15,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_author(self, obj):
-        return f"{obj.author.profile.name} {obj.author.profile.surname} {obj.author.profile.email}"
+        return f"{obj.author.profile.name} {obj.author.profile.surname} {obj.author.profile.email}".replace("None ", "").replace(" None", "")
 
     def get_authorId(self, obj):
         return obj.author.id
@@ -24,7 +24,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         return obj.author == self.context.get("request").user
 
     def get_usersNames(self, obj):
-        return [f"{user.name} {user.surname} {user.email}" for user in obj.users.all()]
+        return [{"name":user.name, "surname":user.surname, "email" : user.email, "phoneNumber":user.phoneNumber, "age": user.ageg} for user in obj.users.all()]
 
 
 class ProjectsSerializer(ProjectSerializer):
