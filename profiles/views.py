@@ -26,7 +26,7 @@ def updateProfile(request):
         return Response({'message': 'You cannot send empty surname'}, status=status.HTTP_400_BAD_REQUEST)
     elif not 'sex' in request.data or request.data['sex'] != "Male" and request.data['sex'] != "Female":
         return Response({'message': 'Please enter a valid gender'}, status=status.HTTP_400_BAD_REQUEST)
-    elif not 'age' or request.data['age'] and  type(request.data['age'])!=int or request.data['age'] < 18 or request.data['age'] > 100:
+    elif not 'age' in request.data or request.data['age'] and  type(request.data['age'])!=int or request.data['age'] < 18 or request.data['age'] > 100:
         return Response({'message': 'Please enter a valid age'}, status=status.HTTP_400_BAD_REQUEST)
     elif not "phoneNumber" in request.data or re.match("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$", request.data['phoneNumber']) is None:
         return Response({'message': 'Please enter a valid phone number'}, status=status.HTTP_400_BAD_REQUEST)
