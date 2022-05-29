@@ -1,7 +1,6 @@
 from .models import Profile
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
+
 
 class ProfilesSerializer(serializers.ModelSerializer):
     label = serializers.SerializerMethodField()
@@ -25,4 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ["name", "surname", "age", "sex", "phoneNumber", "email"]
         ordering = ['createdAt']
 
-
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["name", "surname", "age", "sex", "phoneNumber"]

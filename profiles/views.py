@@ -2,11 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Profile
-from base.models import User
-from .serializers import ProfileSerializer, ProfilesSerializer
+from .serializers import ProfileSerializer, ProfilesSerializer, UpdateProfileSerializer
 from rest_framework import status
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 import re
 
 @api_view(['GET'])
@@ -23,36 +20,27 @@ def getProfile(request):
 @permission_classes([IsAuthenticated])
 def updateProfile(request):
 
-    if request.method == 'OPTIONS':
-        return Response(status=status.HTTP_200_OK)
-    elif request.data['name'] == '':
+    if not 'name' in request.data or request.data['name'] == "":
         return Response({'message': 'You cannot send empty name'}, status=status.HTTP_400_BAD_REQUEST)
-    elif request.data['surname'] == '':
+    elif not 'surname' in request.data or request.data['surname'] == "":
         return Response({'message': 'You cannot send empty surname'}, status=status.HTTP_400_BAD_REQUEST)
-    elif not request.data['sex']:
-        return Response({'message': 'You cannot send empty sex'}, status=status.HTTP_400_BAD_REQUEST)
-    elif request.data['age'] == "" or  type(request.data['age'])!=int or request.data['age'] < 18 or request.data['age'] > 100:
+    elif not 'sex' in request.data or request.data['sex'] != "Male" and request.data['sex'] != "Female":
+        return Response({'message': 'Please enter a valid gender'}, status=status.HTTP_400_BAD_REQUEST)
+    elif not 'age' or request.data['age'] and  type(request.data['age'])!=int or request.data['age'] < 18 or request.data['age'] > 100:
         return Response({'message': 'Please enter a valid age'}, status=status.HTTP_400_BAD_REQUEST)
-    elif re.match("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$", request.data['phoneNumber']) is None:
+    elif not "phoneNumber" in request.data or re.match("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$", request.data['phoneNumber']) is None:
         return Response({'message': 'Please enter a valid phone number'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        try:
-            validate_email(request.data['email'])
-        except ValidationError:
-            return Response({'message': 'Please enter a valid email address'}, status=status.HTTP_400_BAD_REQUEST)
-        
+    else:    
         profile = Profile.objects.get(user=request.user)
-
         profile.name = request.data['name']
         profile.surname = request.data['surname']
-        profile.email = request.data['email']
         profile.sex = request.data['sex']
         profile.phoneNumber = request.data['phoneNumber']
         profile.age = request.data['age']
 
         profile.save()
 
-        return Response(ProfileSerializer(profile, many=False).data, status=status.HTTP_200_OK)
+        return Response(UpdateProfileSerializer(profile, many=False).data, status=status.HTTP_200_OK)
     
 
 
