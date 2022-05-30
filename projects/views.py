@@ -41,10 +41,10 @@ def createProject(request):
     if request.method == 'OPTIONS':
         return Response(status=status.HTTP_200_OK)
         
-    if request.data['title'] == '':
+    if request.data['title'] == '' or not 'title' in request.data:
         return Response({'message': 'You cannot send empty title'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.data['description'] == '':
+    if request.data['description'] == '' or not 'description' in request.data:
         return Response({'message': 'You cannot send empty description'}, status=status.HTTP_400_BAD_REQUEST)
 
     if request.data['dateOfStart'] > request.data['dateOfEnd']:
