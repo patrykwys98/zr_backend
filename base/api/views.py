@@ -4,8 +4,8 @@ from base.models import User
 from rest_framework.response import Response
 from rest_framework import status, generics
 from .serializers import RegisterSerializer, ChangePasswordSerializer
-from profiles.models import Profile
 from rest_framework.permissions import IsAuthenticated
+
 
 from django.conf import settings
 

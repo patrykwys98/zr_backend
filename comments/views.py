@@ -14,11 +14,19 @@ def addComment(request):
     if request.method == 'OPTIONS':
         return Response(status=status.HTTP_200_OK)
 
-    if request.user.profile in Project.objects.get(id=request.data['project_id']).users.all() or Project.objects.get(id=request.data['project_id']).author == request.user:
-        if request.data['text'] == '':
-            return Response({'message': 'Comment cannot be empty'})
+    try:
+        project = Project.objects.get(id=request.data.get('project_id'))
+    except Project.DoesNotExist:
+        return Response({"message": "Project does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    user = request.user
+    text = request.data.get('text').strip()
+    
+    if request.user.profile in project.users.all() or project.author == user:
+        if not text:
+            return Response({'message': 'Comment cannot be empty'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(CreateCommentSerializer(Comment.objects.create(
-            author=request.user, text=request.data["text"], project=Project.objects.get(id=request.data['project_id'])), many=False).data)
+            author=user, text=text, project=project), many=False).data)
     else:
-        return Response({"message": "You cant comment project"}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"message": "You cant comment this project"}, status=status.HTTP_403_FORBIDDEN)
