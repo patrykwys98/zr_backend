@@ -8,6 +8,6 @@ class Comment(models.Model):
         to=User, on_delete=models.CASCADE)
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField(null=False, blank=False)
+    text = models.CharField(null=False, blank=False, max_length=150)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)

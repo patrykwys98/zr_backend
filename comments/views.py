@@ -23,6 +23,8 @@ def addComment(request):
 
     try:
         text = request.data.get('text').strip()
+        if len(text) > 150:
+            return Response({"message": "Text is too long"}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response({"message": "Text is required"}, status=status.HTTP_400_BAD_REQUEST)
     

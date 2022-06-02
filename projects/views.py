@@ -55,8 +55,12 @@ def createProject(request):
         
     if not title:
         return Response({'message': 'You cannot send empty title'}, status=status.HTTP_400_BAD_REQUEST)
+    elif len(title) > 65:
+        return Response({'message': 'Title is too long.'}, status=status.HTTP_400_BAD_REQUEST)
     elif not description:
         return Response({'message': 'You cannot send empty description'}, status=status.HTTP_400_BAD_REQUEST)
+    elif len(description) > 2000:
+        return Response({'message': 'Description is too long'}, status=status.HTTP_400_BAD_REQUEST)
     elif not dateOfStart or not dateOfEnd or dateOfStart > dateOfEnd:
         return Response({'message': 'Enter a valid date'}, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -97,8 +101,12 @@ def updateProject(request):
         return Response(status=status.HTTP_403_FORBIDDEN)
     elif not title:
         return Response({'message': 'Title field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+    elif len(title) > 65:
+        return Response({'message': 'Title is too long.'}, status=status.HTTP_400_BAD_REQUEST)
     elif not description:
         return Response({'message': 'Description field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+    elif len(description) >= 2000:
+        return Response({'message': 'Description is too long'}, status=status.HTTP_400_BAD_REQUEST)
     elif not dateOfStart or not dateOfEnd or dateOfStart > dateOfEnd:
         return Response({'message': 'Please enter a valid start date and end date'}, status=status.HTTP_400_BAD_REQUEST)
     elif projectStatus not in ["New", "In progress", "Completed"]:
@@ -118,8 +126,7 @@ def updateProject(request):
         project.save()
 
         return Response(UpdateProjectSerializer(project, many=False).data, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
+    
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
