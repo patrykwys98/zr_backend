@@ -20,7 +20,11 @@ def addComment(request):
         return Response({"message": "Project does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
     user = request.user
-    text = request.data.get('text').strip()
+
+    try:
+        text = request.data.get('text').strip()
+    except:
+        return Response({"message": "Text is required"}, status=status.HTTP_400_BAD_REQUEST)
     
     if request.user.profile in project.users.all() or project.author == user:
         if not text:

@@ -41,9 +41,15 @@ def createProject(request):
 
     if request.method == 'OPTIONS':
         return Response(status=status.HTTP_200_OK)
+    try:
+        title = request.data.get('title').strip()
+    except:
+        return Response({"message": "Title is required"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        description = request.data.get('description').strip()
+    except:
+        return Response({"message": "Description is required"}, status=status.HTTP_400_BAD_REQUEST)
     
-    title = request.data.get('title').strip()
-    description = request.data.get('description').strip()
     dateOfStart = request.data.get('dateOfStart')
     dateOfEnd = request.data.get('dateOfEnd')
         
@@ -74,8 +80,14 @@ def updateProject(request):
         return Response(status=status.HTTP_200_OK)
     
     project = Project.objects.get(id=request.data.get("id"))
-    title = request.data.get("title").strip()
-    description = request.data.get("description").strip()
+    try:
+        title = request.data.get("title").strip()
+    except:
+        return Response({"message": "Title is required"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        description = request.data.get("description").strip()
+    except:
+        return Response({"message": "Description is required"}, status=status.HTTP_400_BAD_REQUEST)
     projectStatus = request.data.get("status")
     dateOfStart = request.data.get("dateOfStart")
     dateOfEnd = request.data.get("dateOfEnd")
